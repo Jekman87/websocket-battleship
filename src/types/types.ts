@@ -16,6 +16,19 @@ export type UserData = {
   errorText?: string;
 };
 
+export type Room = {
+  roomId: number | string;
+  roomUsers: {
+    name: string;
+    index: number;
+  }[];
+};
+
+export type Winner = {
+  name: string;
+  wins: number;
+};
+
 export enum EventType {
   Registration = 'reg',
   AddUserToRoom = 'add_user_to_room',
