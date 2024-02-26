@@ -1,21 +1,42 @@
 import { httpServer } from './http_server/index';
-import { WebSocketServer } from 'ws';
+import { RawData, WebSocketServer } from 'ws';
+import { handleData } from './controllers/mainHandler';
+import { getUUID } from './utils/helpers';
+import { BattleshipWebSocket } from './types/types';
 
 const HTTP_PORT = 8181;
 
 console.log(`Start static http server on the ${HTTP_PORT} port!`);
 httpServer.listen(HTTP_PORT);
 
-const wss = new WebSocketServer({ port: 3000 });
+const WS_PORT = 3000;
 
-wss.on('connection', function connection(ws) {
-  console.log('!!connection');
-  ws.on('error', console.error);
-  ws.on('close', () => console.log('WS connection closed!'));
+export const wss = new WebSocketServer({ port: WS_PORT }, () =>
+  console.log(`Start WebSocketServer on the ${WS_PORT} port!`),
+);
 
-  ws.on('message', function message(data) {
-    console.log('received: %s', data);
+wss.on('connection', (ws: BattleshipWebSocket) => {
+  ws.id = getUUID();
+  console.log(`New WS client ${ws.id} connected!`);
+
+  ws.on('message', (data: RawData) => {
+    handleData(ws, data);
   });
 
-  // ws.send(JSON.stringify(resp));
+  ws.on('error', (error) => console.log('WS client error:', error));
+  ws.on('close', () => console.log('WS client connection closed!')); // remove user
+
+  wss.on('close', () => {
+    console.log('WebSocketServer closed!');
+    ws.close();
+  });
+  wss.on('error', (error) => {
+    console.log('WebSocketServer error:', error);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('WebSocketServer has been closed!');
+  wss.close();
+  process.exit();
 });
