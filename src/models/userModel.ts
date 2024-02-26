@@ -1,8 +1,14 @@
-import { UserData } from '../types/types';
+import { User } from '../types/types';
 
-export const users: UserData[] = [];
+export const users: User[] = [];
 
 export const getUserIndex = (id: string) => users.findIndex((user) => user.index === id);
+
+export const getUserById = (id: string) => {
+  const index = getUserIndex(id);
+
+  return users[index];
+};
 
 export const deleteUser = (id: string) => {
   const index = getUserIndex(id);

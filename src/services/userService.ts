@@ -4,7 +4,7 @@ import { BattleshipWebSocket, EventType, UserData } from '../types/types';
 import { INVALID_USER_INPUT, USER_ALREADY_EXISTS } from '../utils/constants';
 
 export const sendUserExists = (ws: BattleshipWebSocket, userData: UserData) => {
-  const data = {
+  const data: UserData = {
     name: userData.name,
     index: ws.id,
     error: true,
@@ -15,7 +15,7 @@ export const sendUserExists = (ws: BattleshipWebSocket, userData: UserData) => {
 };
 
 export const sendInvalidUserInput = (ws: BattleshipWebSocket, userData: UserData) => {
-  const data = {
+  const data: UserData = {
     name: userData.name,
     index: ws.id,
     error: true,
@@ -26,7 +26,7 @@ export const sendInvalidUserInput = (ws: BattleshipWebSocket, userData: UserData
 };
 
 export const sendSuccessfulRegistration = (ws: BattleshipWebSocket, userData: UserData) => {
-  const data = {
+  const data: UserData = {
     name: userData.name,
     index: ws.id,
     error: false,

@@ -1,8 +1,9 @@
 import { wss } from '..';
 import { checkUserExists, users } from '../models/userModel';
 import { sendInvalidUserInput, sendSuccessfulRegistration, sendUpdateWinners, sendUserExists } from '../services/userService';
-import { BattleshipWebSocket, UserData } from '../types/types';
+import { BattleshipWebSocket, User, UserData } from '../types/types';
 import { validateUserInput } from '../utils/helpers';
+import { updateRoom } from './roomController';
 
 export const registerUser = (ws: BattleshipWebSocket, data: UserData) => {
   const { name, password } = data;
@@ -15,11 +16,11 @@ export const registerUser = (ws: BattleshipWebSocket, data: UserData) => {
 
   const isValidUserInput = validateUserInput(data);
 
-  if (!isValidUserInput) {
+  if (!isValidUserInput || !name || !password) {
     return sendInvalidUserInput(ws, data);
   }
 
-  const newUser: UserData = {
+  const newUser: User = {
     name,
     password,
     index: ws.id,
@@ -28,6 +29,8 @@ export const registerUser = (ws: BattleshipWebSocket, data: UserData) => {
   users.push(newUser);
 
   sendSuccessfulRegistration(ws, newUser);
+  updateRoom();
+  updateWinners();
 };
 
 export const updateWinners = () => {

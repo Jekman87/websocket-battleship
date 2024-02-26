@@ -1,6 +1,6 @@
-import { BattleshipWebSocket, EventType } from '../types/types';
+import { BattleshipWebSocket, Data, EventType } from '../types/types';
 
-export const sendMessage = (ws: BattleshipWebSocket, event: EventType, data: object) => { // update
+export const sendMessage = (ws: BattleshipWebSocket, event: EventType, data: Data) => {
   const res = {
     type: event,
     data: JSON.stringify(data),

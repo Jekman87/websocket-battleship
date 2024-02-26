@@ -1,11 +1,19 @@
-import { WebSocket } from "ws";
+import { WebSocket } from 'ws';
 
 export type BattleshipWebSocket = WebSocket & { id: string };
 
+export type Data = UserData | RoomData | GameData | Winner[] | Room[];
+
 export type WsData = {
   type: EventType;
-  data: UserData;
+  data: Data;
   id: number;
+};
+
+export type User = {
+  name: string;
+  password: string;
+  index: number | string;
 };
 
 export type UserData = {
@@ -20,8 +28,27 @@ export type Room = {
   roomId: number | string;
   roomUsers: {
     name: string;
-    index: number;
+    index: number | string;
   }[];
+};
+
+export type RoomData = {
+  indexRoom: number | string;
+};
+
+export type GameData = {
+  idGame: number | string;
+  idPlayer: number | string;
+};
+
+export type Game = {
+  idGame: number | string;
+  player: Player[];
+};
+
+export type Player = {
+  idPlayer: number | string;
+  board: any;
 };
 
 export type Winner = {
@@ -42,4 +69,5 @@ export enum EventType {
   RandomAttack = 'randomAttack',
   Turn = 'turn',
   Finish = 'finish',
+  SinglePlay = 'single_play',
 }
